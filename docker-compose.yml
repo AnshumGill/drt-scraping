@@ -1,0 +1,30 @@
+version: "3"
+services:
+    db:
+        image: mysql:8.0
+        cap_add:
+            - SYS_NICE
+        restart: always
+        environment:
+            - MYSQL_DATABASE=drt
+            - MYSQL_ROOT_PASSWORD=password
+        container_name: "drt_scrape_db"
+        ports:
+            - "3306:3306"
+        volumes:
+            - db:/var/lib/mysql
+
+    app:
+        build: .
+        command: python3 scrape.py
+        ports:
+            - "8080:8080"
+        container_name: "drt_scrape_app"
+        restart: always
+        depends_on:
+            - db
+
+volumes:
+    db:
+        driver: local
+
