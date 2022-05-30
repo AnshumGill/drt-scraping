@@ -71,6 +71,7 @@ def processParty(row: BeautifulSoup,moreInfo: BeautifulSoup) -> bool:
         return False
     except SQLAlchemyError as e:
         logging.error(f"Error occurred while inserting record for party, {e}")
+        db.session.rollback()
         return False
     
 def processCases(row: BeautifulSoup,moreInfo: BeautifulSoup) -> bool:
@@ -120,6 +121,7 @@ def processCases(row: BeautifulSoup,moreInfo: BeautifulSoup) -> bool:
         return False
     except SQLAlchemyError as e:
         logging.error(f"Error occurred while inserting record, {e}")
+        db.session.rollback()
         return False
 
 def getMoreInfoId(row: BeautifulSoup) -> str:
