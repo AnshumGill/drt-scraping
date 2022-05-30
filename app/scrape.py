@@ -53,7 +53,7 @@ def getAdvocate(tag: BeautifulSoup) -> str:
         logging.debug("Advocate Name not found")
         return None
 
-def processParty(row: BeautifulSoup,moreInfo: BeautifulSoup) -> str:
+def processParty(row: BeautifulSoup,moreInfo: BeautifulSoup) -> bool:
     logging.debug("Inserting Parties")
     cols=row.find_all(name="td")
     respondantMoreInfo=moreInfo.find(name='th',text=re.compile(respondentHeaderString)).parent.find_next_sibling('tr').find(name='td')
@@ -73,7 +73,7 @@ def processParty(row: BeautifulSoup,moreInfo: BeautifulSoup) -> str:
         logging.error(f"Error occurred while inserting record for party, {e}")
         return False
     
-def processCases(row: BeautifulSoup,moreInfo: BeautifulSoup) -> str:
+def processCases(row: BeautifulSoup,moreInfo: BeautifulSoup) -> bool:
     cols=row.find_all(name="td")
     diary=cols[col_map['diary']].text.strip().split('/')[0]
     caseCol=cols[col_map['caseNo']].text.strip()
@@ -133,7 +133,7 @@ def getMoreInfoId(row: BeautifulSoup) -> str:
         logging.warning(f"Anchor tag not found for")
         return None
 
-def requestMoreInfo(s:session,moreInfoId: BeautifulSoup) -> list:
+def requestMoreInfo(s:session,moreInfoId: BeautifulSoup) -> BeautifulSoup:
     logging.debug(f"Requesting more info for {moreInfoId}")
     resp=s.get(moreInfoURL+moreInfoId)
     if(resp.status_code==200):
